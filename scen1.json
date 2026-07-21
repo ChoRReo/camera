@@ -1,0 +1,26 @@
+{
+    "scene_id": "00001",
+    "location": "indoor",
+    "time": "2026-06-01 15:30",
+    "weather": "not applicable",
+    "illumination": "indoor diffuse light",
+    "sample": "black glossy plastic mouse",
+    "materials": [
+        "smooth dielectric",
+        "black plastic",
+        "glossy"
+    ],
+    "polarization_states": [
+        "I0",
+        "I45",
+        "I90",
+        "I135",
+        "IL",
+        "IR"
+    ],
+    "camera": "industrial camera",
+    "exposure_ms": 8.0,
+    "gain": 0,
+    "aperture": "fixed",
+    "notes": "front and side regions both visible; no saturation"
+}
