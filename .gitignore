@@ -1,0 +1,51 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Script outputs
+cam_data_average_summary.json
+polarization_maps_summary.json
+frame_count_comparison_summary.json
+frame_count_comparison.csv
+frame_count_comparison/
+compare_result/
+
+# Averaged polarization images from process_cam_data.py
+/0.png
+/45.png
+/90.png
+/135.png
+/L.png
+/R.png
+/*/0.png
+/*/45.png
+/*/90.png
+/*/135.png
+/*/L.png
+/*/R.png
+
+# Polarization maps from compute_polarization_maps.py
+/dolp.npy
+/dolp.png
+/docp.npy
+/docp.png
+/aop_rad.npy
+/aop_rad.png
+*_dolp.npy
+*_dolp.png
+*_docp.npy
+*_docp.png
+*_aop_rad.npy
+*_aop_rad.png
