@@ -81,6 +81,18 @@ def parse_args() -> argparse.Namespace:
         help="Summary JSON filename. Default: cam_data_average_summary.json",
     )
     parser.add_argument(
+        "--output-layout",
+        choices=("auto", "flat", "scene-subdir", "prefixed"),
+        default="auto",
+        help=(
+            "Averaged PNG layout. auto saves one scene as 0.png, 45.png, ... "
+            "and multiple scenes as <scene>/0.png, <scene>/45.png, ...; "
+            "flat always saves 0.png, 45.png, ...; scene-subdir always saves "
+            "<scene>/0.png, ...; prefixed keeps the old <scene>_0_avg.png format. "
+            "Default: auto"
+        ),
+    )
+    parser.add_argument(
         "--overwrite",
         action="store_true",
         help="Overwrite existing averaged PNG files.",
@@ -110,9 +122,18 @@ def sample_frame(frame: np.ndarray, stride: int) -> np.ndarray:
     return frame[::stride, ::stride, ...].astype(np.float64)
 
 
-def output_name(scene: str, direction: str) -> str:
+def output_name(scene: str, direction: str, layout: str, single_scene: bool) -> Path:
     safe_direction = direction.replace("/", "_")
-    return f"{scene}_{safe_direction}_avg.png"
+    effective_layout = layout
+    if effective_layout == "auto":
+        effective_layout = "flat" if single_scene else "scene-subdir"
+    if effective_layout == "flat":
+        return Path(f"{safe_direction}.png")
+    if effective_layout == "scene-subdir":
+        return Path(scene) / f"{safe_direction}.png"
+    if effective_layout == "prefixed":
+        return Path(f"{scene}_{safe_direction}_avg.png")
+    raise ValueError(f"Unsupported output layout: {layout}")
 
 
 def process_group(
@@ -120,15 +141,18 @@ def process_group(
     direction: str,
     files: list[Path],
     output_dir: Path,
+    output_layout: str,
+    single_scene: bool,
     sample_stride: int,
     milestones: list[int],
     thresholds: list[float],
     overwrite: bool,
 ) -> dict:
-    out_name = output_name(scene_name, direction)
+    out_name = output_name(scene_name, direction, output_layout, single_scene)
     out_path = output_dir / out_name
     if out_path.exists() and not overwrite:
         raise FileExistsError(f"{out_path} exists. Pass --overwrite to replace it.")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
 
     nfiles = len(files)
     accumulator = None
@@ -189,7 +213,7 @@ def process_group(
         "scene": scene_name,
         "direction": direction,
         "frames": nfiles,
-        "output": out_name,
+        "output": str(out_name),
         "image_shape": list(image_shape),
         "sample_stride": sample_stride,
         "single_frame_rms_noise_dn_sampled": single_frame_rms_noise,
@@ -210,9 +234,15 @@ def main() -> None:
         raise ValueError("--sample-stride must be >= 1")
 
     scenes = list_scenes(root, args.scenes)
+    if args.output_layout == "flat" and len(scenes) > 1:
+        raise ValueError(
+            "--output-layout flat cannot be used with multiple scenes because files like 0.png "
+            "would overwrite each other. Use --scenes for one scene, or use scene-subdir/auto."
+        )
     summary = {
         "data_root": str(root),
         "output_dir": str(output_dir),
+        "output_layout": args.output_layout,
         "directions": args.directions,
         "pattern": args.pattern,
         "groups": [],
@@ -234,6 +264,8 @@ def main() -> None:
                 direction=direction,
                 files=files,
                 output_dir=output_dir,
+                output_layout=args.output_layout,
+                single_scene=len(scenes) == 1,
                 sample_stride=args.sample_stride,
                 milestones=args.milestones,
                 thresholds=args.noise_thresholds,
