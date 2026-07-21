@@ -27,7 +27,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "data_root",
         nargs="?",
-        default="/Volumes/xuyifan_u/cam_data",
+        default="./cam_data",
         help="Dataset root. Default: /Volumes/xuyifan_u/cam_data",
     )
     parser.add_argument(

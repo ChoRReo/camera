@@ -32,7 +32,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "input_dir",
         nargs="?",
-        default=".",
+        default="./",
         help="Directory containing averaged PNGs. Default: current directory",
     )
     parser.add_argument(
