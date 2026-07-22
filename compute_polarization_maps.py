@@ -64,10 +64,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--channel",
         choices=("luma", "mean", "r", "g", "b", "rgb"),
-        default="luma",
+        default="rgb",
         help=(
-            "How RGB inputs are converted before computing maps. luma uses "
-            "Rec. 601 weights. rgb computes per-channel maps. Default: luma"
+            "How RGB inputs are used before computing maps. rgb computes "
+            "per-channel maps. Default: rgb"
         ),
     )
     parser.add_argument(

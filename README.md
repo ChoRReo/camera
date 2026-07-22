@@ -89,7 +89,7 @@ pol_00001/aop_rad.png
 pol_00001/polarization_maps_summary.json
 ```
 
-`.npy` 保存 float32 原始数值，适合后续计算；`.png` 是 16-bit 可视化结果。
+DoLP、DoCP、AoP 默认按 RGB 三通道分别计算。`.npy` 保存 float32 原始数值，形状通常为 `H x W x 3`，适合后续计算；`.png` 是 RGB 可视化结果。
 
 默认计算公式：
 
@@ -113,6 +113,8 @@ python3 compute_polarization_maps.py avg_00001 -o pol_00001 --circular-sign L-mi
 ## 3. 比较不同采集张数
 
 这个脚本直接读取原始数据，不需要先生成平均图。它会分别用不同张数计算平均图、DoLP、DoCP、AoP，然后和全量参考结果比较。
+
+比较过程同样默认按 RGB 三通道分别计算偏振参数。
 
 ```bash
 python3 compare_frame_counts.py /Volumes/xuyifan_u/cam_data -o compare_result --scenes 00001 --overwrite

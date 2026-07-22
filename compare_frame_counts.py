@@ -72,8 +72,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--channel",
         choices=("luma", "mean", "r", "g", "b", "rgb"),
-        default="luma",
-        help="How RGB frames are converted before computing maps. Default: luma",
+        default="rgb",
+        help="How RGB frames are used before computing maps. Default: rgb",
     )
     parser.add_argument(
         "--s0-mode",
