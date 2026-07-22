@@ -21,6 +21,8 @@ frame_count_comparison_summary.json
 frame_count_comparison.csv
 frame_count_comparison/
 compare_result/
+output/
+polarization/
 
 # Averaged polarization images from process_cam_data.py
 /0.png
